@@ -33,8 +33,8 @@ int sample_skip_counter = 1;
 
 TfLiteStatus SetupAccelerometer(tflite::ErrorReporter* error_reporter) {
   // Wait until we know the serial port is ready
-  while (!Serial) {
-  }
+//  while (!Serial) {
+//  }
 
   // Switch on the IMU
   if (!IMU.begin()) {

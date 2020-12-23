@@ -48,9 +48,9 @@ bool should_clear_buffer = false;
 }  // namespace
 
 // BLE Magic Wand Service
-BLEService magicWandService("180F");
+BLEService magicWandService("33e8c28d-f16c-46aa-8d77-85608274807f");
 // BLE Magic Wand Characteristic
-BLEUnsignedCharCharacteristic magicWandGestureChar("2A19",  // standard 16-bit characteristic UUID
+BLEUnsignedCharCharacteristic magicWandGestureChar("155b8a1f-e774-4556-b01b-6723bddb1d65",  // custom 128-bit characteristic UUID
     BLERead | BLENotify); // remote clients will be able to get notifications if this characteristic changes
 
 // The name of this function is important for Arduino compatibility.
@@ -119,7 +119,7 @@ void setup() {
 
   // Setup for BLE
   Serial.begin(9600);    // initialize serial communication
-//  while (!Serial);
+  //  while (!Serial);
   // begin initialization
   if (!BLE.begin()) {
     Serial.println("starting BLE failed!");
@@ -163,20 +163,18 @@ void loop() {
   // wait for a BLE central
   BLEDevice central = BLE.central();
   // if a central is connected to the peripheral:
-  if (central && should_clear_buffer == 1) {
-      Serial.print("Connected to central: ");
-      // print the central's BT address:
-      Serial.println(central.address());
-      Serial.print("should_clear_buffer = ");
-      Serial.println(should_clear_buffer);
-      Serial.print("Magic Wand Gesture is now: "); // print it
-      Serial.println(gesture_index);
-      magicWandGestureChar.writeValue(gesture_index);  // and update the magic wand gesture characteristic
-    if (!central.connected()) {
-      Serial.print("Disconnected from central: ");
-      Serial.println(central.address());
-    }
+  if (central && should_clear_buffer) {
+    Serial.print("Connected to central: ");
+    // print the central's BT address:
+    Serial.println(central.address());
+    Serial.print("Magic Wand Gesture is now: "); // print it
+    Serial.println(gesture_index);
+    magicWandGestureChar.writeValue(gesture_index);  // and update the magic wand gesture characteristic
   }
+//  if (!central.connected()) {
+//    Serial.print("Disconnected from central: ");
+//    Serial.println(central.address());
+//  }
   // Produce an output
   HandleOutput(error_reporter, gesture_index);
 }
